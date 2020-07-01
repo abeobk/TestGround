@@ -38,6 +38,7 @@ namespace TestGround {
             //convert to rgb
             var rgb = i5.ToBGR();
 
+
             //split channel
             var chs = rgb.Split();
 
@@ -56,6 +57,7 @@ namespace TestGround {
             unsafe {
                 byte* ptr = accessor.Ptr(row);
                 //do unsafe operations...
+                //high performance processing --> as fast as C++
             }
 
 
