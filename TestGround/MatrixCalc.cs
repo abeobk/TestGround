@@ -11,13 +11,14 @@ namespace TestGround {
     public class MatrixCalc {
         public static void MatrixVectorCalcExample() {
             //Create some 4x4 matrix
-            Matrix44d H = new Matrix44d(1, 2, 3, 4,
-                                        5, 6, 7, 8,
+            Matrix44d H = new Matrix44d(1, 2, 3,   4,
+                                        5, 6, 7,   8,
                                         9, 10, 11, 12,
-                                        13, 14, 15, 16);
+                                        0,0,0,     1);
 
             //H = [  [R3]  T3]
             //    [ 0 0 0  1 ]
+
             //get 3x3 sub matrix (rotation matrix in homogeneous 4x4)
             var R = H.R3;
             //get 3x1 sub matrix (translation vector in homogeneous 4x4)
@@ -38,6 +39,8 @@ namespace TestGround {
             //set identity
             H.SetIdentity();
 
+            //Hr, Hc, X
+            // Hr*X*Hc.Inv()
             //Linear algebra
             H = (3 * H + K / 3) * 3.25;
 

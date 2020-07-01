@@ -22,6 +22,8 @@ using LotusAPI.HW;
 using TestGround.Properties;
 using LotusAPI.Data;
 using System.Diagnostics;
+using Abeo.Controls.Roundable;
+using LotusAPI.Math;
 
 namespace TestGround {
 
@@ -30,6 +32,22 @@ namespace TestGround {
         //
         Registry.BoolValue bval = new Registry.BoolValue("MySetting", "bval", false);
         Registry.IntValue ival = new Registry.IntValue("MySetting", "ival", 5);
+
+
+        //return error code
+        int DoSomething(int k = 3) {
+            if(k == 1) return 2;
+            else if(k == 43) return 5;
+            return 0;
+        }
+
+
+        class RobotOfflineException: Exception {
+            public override string Message => "Robot is not online"; 
+        }
+        class PLCOfflineException: Exception {
+            public override string Message => "PLC is not online"; 
+        }
         
 
         public Form1() {
@@ -39,17 +57,52 @@ namespace TestGround {
             Library.Initialize();
             Global.Init();
 
+            Library.NumberFormat = "0.000";
+
+            Matrix44d A = new Matrix44d(1.23456389, 2, 3, 4,
+                                        5, 6, 7, 8,
+                                        9, 10, 11, 12,
+                                        13, 14, 15, 16);
+
+            //call some function
+            //int err_code = DoSomething(43);
+            //if(err_code != 0) {
+            //    Logger.Error($"Some error message with code [{err_code}]");
+            //}
+
+            Logger.Debug("A=\n" + A);
+            Logger.Debug("A*3-A=\n" + (A*3-A));
+            Logger.Debug("I=\n" + Matrix44d.Eye());
+
+            Vector4d v = new Vector4d(1, 23, 4, 5);
+
+            Logger.Debug("v=\n" + v);
+            Logger.Debug("A*v=\n" + (A*v));
+            Logger.Debug("A*A=\n" + (A*A));
+
+            Matrix44d B = new Matrix44d(1.23456389, 2, 3, 4,
+                                        5, 6, 7, 8,
+                                        9, 10, 11, 12,
+                                        13, 14, 15, 16.2342345);
+            Logger.Debug("Bi=\n" + (B.Inv()));
+            Logger.Debug("Bi*B=\n" + (B.Inv()*B));
+
+            
+            //Error level
+            // Normal, Debug, Trace, Warn, Info, Fatal
+
+
             //REGISTRY
 
-//Set value
-//bval.Value = true;
-////read value
-//var ok = bval;
-//Logger.Debug("bval=" + ok);
+            //Set value
+            //bval.Value = true;
+            ////read value
+            //var ok = bval;
+            //Logger.Debug("bval=" + ok);
 
-//
+            //
 
-//(new FormObjectProperty(Global.Setting,"MySettingDialog")).ShowDialog();
+            //(new FormObjectProperty(Global.Setting,"MySettingDialog")).ShowDialog();
 
 
 #if false
@@ -125,8 +178,35 @@ namespace TestGround {
 
         }
 
+
         private void button1_Click(object sender, EventArgs e) {
             (new LotusAPI.HW.Dialogs.FormMultiCamera()).ShowDialog();
+            //reaload camera setting
+            Json camsetting = Json.ReadFromFile("D:/camers.json");
+            //load camera form files
+            var cams = LotusAPI.HW.Utils.ConnectCameraArray(camsetting);
+            //opmize network
+            Registry.IntValue _mtu = new Registry.IntValue("Network", "MTU", 1500);
+            Registry.IntValue _reserve = new Registry.IntValue("Network", "ReservePercent", 20);
+
+            //network bandwidth optimization
+            LotusAPI.HW.Utils.OptimizeBandwidth(cams, _mtu, _reserve);
+
+            //captures
+            Captureshow(cams[0], roundImageView1);
+            Captureshow(cams[1], roundImageView2);
+            Captureshow(cams[2], roundImageView3);
+            Captureshow(cams[3], roundImageView4);
+
+        }
+        void Captureshow(CameraDevice cam, RoundImageView iv) {
+            try {
+                cam.StartAcquisition();
+                cam.Trigger();
+                var img = cam.Capture();
+                cam.StopAcquisition();
+                iv.SetImage(img);
+            } catch(Exception ex) { Logger.Error(ex.Message); }
         }
 
         //private void Settings_PropertyChangedEvent(object sender, SettingObject.Property e) {
