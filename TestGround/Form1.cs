@@ -21,9 +21,17 @@ using LotusAPI.Controls.Dialogs;
 using LotusAPI.HW;
 using TestGround.Properties;
 using LotusAPI.Data;
+using System.Diagnostics;
 
 namespace TestGround {
+
     public partial class Form1 : Form {
+
+        //
+        Registry.BoolValue bval = new Registry.BoolValue("MySetting", "bval", false);
+        Registry.IntValue ival = new Registry.IntValue("MySetting", "ival", 5);
+        
+
         public Form1() {
             InitializeComponent();
             logView1.ShowDateTime = true;
@@ -31,117 +39,99 @@ namespace TestGround {
             Library.Initialize();
             Global.Init();
 
+            //REGISTRY
 
-            TicToc tt = new TicToc();
-            //creating table
-            Database db = new SqliteDatabase("D:/sqlite.db");
-            //Database db = new SqlExpressDatabase("localhost\\SQLEXPRESS", "Result10");
-            if(!db.Connect()) {
-                Logger.Error("Failed to connect to database");
-            }
-            else {
+//Set value
+//bval.Value = true;
+////read value
+//var ok = bval;
+//Logger.Debug("bval=" + ok);
 
-                Table tb = new Table("MyResult");
+//
 
-                tb.AddColumns(
-                    new IntColumn("ID", 0),
-                    new DatetimeColumn("Date"),
-                    new CharColumn("Result", "NG", 2),
-                    new FloatColumn("Float"),
-                    new DoubleColumn("DoubleVar"),
-                    new TextColumn("Text")
-                );
-
-                db.AddTable(tb);
+//(new FormObjectProperty(Global.Setting,"MySettingDialog")).ShowDialog();
 
 
-                //using(var transaction = db.BeginTransaction()) {
-                //tt.Tic();
-                //for(int i = 0; i < 10000; i++) {
-                //    dynamic row = tb.NewRow();
-                //    row.ID = int.Parse(db.ExecuteQuery("SELECT COUNT(*) FROM MyResult").Rows[0][0].ToString());
-                //    row.Date = DateTime.Now;
-                //    row.Result = i % 2 == 0 ? "OK" : "NG";
-                //    row.Float = (float)(1.2345678f + i);
-                //    row.DoubleVar = 0.5678923453453120 * i;
-                //    row.Text = $"hello {i}";
-                //    tb.InsertRow(row);
-                //}
-                //transaction.Commit();
-                //}
-                Logger.Debug("Db row insert Elapsed: " + tt.Elapsed);
-            }
+#if false
+            Database db = null;
+            //SQLite database init
+            db = new SqliteDatabase("D:/dbfile.db");
 
-            return;
-            dynamic settings = new SettingObject();
+            //SQLite database init
+            //db = new SqlExpressDatabase(
+            //    "localhost\\SQLEXPRESS", //host name
+            //    "DbName",                //db name
+            //    ""                    //(optional) extra string ...
+            //    );
 
-            //object a = DateTime.Now.ToString("").ToString("");
-            object b = 3.14345346.ToString("0.000");
-            b = DateTime.Now;
-            //settings.Add(
-            //    new SettingObject.Property("ShortName", 1),
-            //    new SettingObject.Property("BoolValue", false),
-            //    new SettingObject.Property("IntValue", 3),
-            //    new SettingObject.Property("DoubleValue", 3.1415),
-            //    new SettingObject.Property("StringValue", "Hello world", typeof(JsonFileLocationEditor)));
+            db.Connect();
 
-            settings.AddProperty("BoolValue", false);
-            settings.AddProperty("ShortName", 1);
-            settings.AddProperty("IntValue", 3);
-            settings.AddProperty("DoubleValue", 5);
-            settings.AddProperty("StringValue", "hello", typeof(JsonFileLocationEditor));
+            //read table
+            var dt = db.ExecuteQuery("select * from MyTable");
+            dataGridView1.DataSource = dt;
 
-            int sum = 0;
-            tt.Tic();
-            for(int i = 0; i < 1000000; i++) {
-                sum += settings.ShortName;
-            }
-            Logger.Debug("Setting Elapsed=" + tt.Elapsed);
-            tt.Tic();
-            sum = 0;
-            for(int i = 0; i < 1000; i++) {
-                sum += Registry.GetIntValue("ShortName", 1);
-            }
-            Logger.Debug("Reg Elapsed=" + tt.Elapsed);
-            Logger.Debug("sum=" + sum);
+            //usage
+            //Define a table with given name
+            Table tbl = new Table("MyTable");
+            Table tbl1 = new Table("MyTable1");
 
-            //settings.BoolValue = false;
-            //settings.IntValue = 5;
-            //settings.DoubleValue = 7;
-            //settings.StringValue = "beo";
-            //var vint = settings.IntValue;
-            //settings["BoolValue"].Value = true; 
-            //var vv = settings["BoolValue"].Value;
+            tbl1.AddColumns(new Column[] { 
+                new IntColumn("ID"),
+                new BoolColumn("BVal"),
+                new TextColumn("Path"),
+            });
+            //add to database
+            db.AddTable(tbl1);
 
-            //Logger.Debug(settings["BoolValue"].ToString());
+            //Define columns names
+            const string COL_ID = "ID";
+            const string COL_DATE = "DATE";
+            const string COL_X = "X";
+            const string COL_Y = "Y";
+            const string COL_Z = "Z";
+            const string COL_OK = "OK";
+            const string COL_PATH = "PATH";
 
-            flatPropertyGrid1.SelectedObject = settings;
-            //propertyGrid1.SelectedObject = settings;
-            //flatPropertyGrid1.PropertyValueChanged += FlatPropertyGrid1_PropertyValueChanged; ;
+            //add columns to table
+            tbl.AddColumns(new Column[] {
+                new IntColumn(COL_ID),
+                new DatetimeColumn(COL_DATE),
+                new FloatColumn(COL_X),
+                new FloatColumn(COL_Y),
+                new FloatColumn(COL_Z),
+                new BoolColumn(COL_OK),
+                new TextColumn(COL_PATH),
+            });
 
-            //settings.PropertyChangedEvent += Settings_PropertyChangedEvent;
+            //add table to database;
+            db.AddTable(tbl);
 
-            Logger.Debug(settings.ToJson().ToString());
+            //Create a new row 
+            dynamic row = tbl.NewRow();
+            //row.ID = 0;
+            //row.DATE= DateTime.Now;
 
-            //(new LotusAPI.HW.Dialogs.FormMultiCamera()).Show();
+            row[COL_ID] = 0;
+            row[COL_DATE] = DateTime.Now;
+            row[COL_X] = (float)0.324345;
+            row[COL_Y] = 0.456f;
+            row[COL_Z] = 0.789f;
+            row[COL_OK] = true;
+            row[COL_PATH] = "somewhere i belong";
+            //and insert to the database
+            tbl.InsertRow(row);
+            //
+#endif
 
-            //var cams = LotusAPI.HW.Utils.ConnectCameraArray(Json.ReadFromFile("D:/cam.json"));
-            //LotusAPI.HW.Utils.OptimizeBandwidth(cams, 9000, 10);
-            //LotusAPI.HW.Utils.SaveCameraArraySetting(cams, "D:/optimized_cams.json");
+        }
 
-            //var cam = cams[0];
-
-            //cam?.StartAcquisition();
-            //cam?.Trigger();
-            //var img = cam?.Capture();
-            //Logger.Debug(img?.ToString());
-            //cam?.StopAcquisition();
-            //cam?.Disconnect();
-            //(new FormConnectCameraArray()).Show();
+        private void button1_Click(object sender, EventArgs e) {
+            (new LotusAPI.HW.Dialogs.FormMultiCamera()).ShowDialog();
         }
 
         //private void Settings_PropertyChangedEvent(object sender, SettingObject.Property e) {
         //    Logger.Debug(e.Name + "= " + e.ToString());
         //}
+
     }
 }

@@ -45,6 +45,7 @@ namespace TestGround {
             AddProperty_<int>(KEY_INT_VALUE, 1);
             AddProperty_<double>(KEY_DOUBLE_VALUE, 1);
             AddProperty_<string>(KEY_STRING_VALUE, "some string");
+            AddProperty_<bool>("MyBool", false);
             AddProperty_<string>(KEY_JSONFILE_PATH, "some string",
                 typeof(JsonFileLocationEditor));
         }
@@ -66,8 +67,10 @@ namespace TestGround {
             // will throw if value type is not (int)
             int i = Setting[MySetting.KEY_INT_VALUE];
 
+            //Setting.ToJson():
 
             //Logger usage
+
             Logger.Log("normal log message");
             Logger.Debug("debug message");
             Logger.Trace("trace message");

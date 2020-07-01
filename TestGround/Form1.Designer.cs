@@ -25,6 +25,9 @@
         private void InitializeComponent() {
             this.flatPropertyGrid1 = new Abeo.Controls.FlatPropertyGrid();
             this.logView1 = new LotusAPI.Controls.LogView();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.button1 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // flatPropertyGrid1
@@ -32,6 +35,7 @@
             this.flatPropertyGrid1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(33)))), ((int)(((byte)(44)))));
             this.flatPropertyGrid1.CategoryForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(142)))), ((int)(((byte)(212)))));
             this.flatPropertyGrid1.CategorySplitterColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(44)))), ((int)(((byte)(55)))));
+            this.flatPropertyGrid1.CommandsActiveLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(59)))), ((int)(((byte)(39)))));
             this.flatPropertyGrid1.CommandsBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(33)))), ((int)(((byte)(44)))));
             this.flatPropertyGrid1.CommandsForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(231)))), ((int)(((byte)(212)))));
             this.flatPropertyGrid1.CommandsLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(142)))), ((int)(((byte)(212)))));
@@ -43,12 +47,12 @@
             this.flatPropertyGrid1.HelpForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(145)))), ((int)(((byte)(161)))), ((int)(((byte)(161)))));
             this.flatPropertyGrid1.HelpVisible = false;
             this.flatPropertyGrid1.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(54)))), ((int)(((byte)(66)))));
-            this.flatPropertyGrid1.Location = new System.Drawing.Point(594, 0);
+            this.flatPropertyGrid1.Location = new System.Drawing.Point(116, 0);
             this.flatPropertyGrid1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flatPropertyGrid1.Name = "flatPropertyGrid1";
             this.flatPropertyGrid1.SelectedItemWithFocusBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(85)))), ((int)(((byte)(110)))), ((int)(((byte)(118)))));
             this.flatPropertyGrid1.SelectedItemWithFocusForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(33)))), ((int)(((byte)(44)))));
-            this.flatPropertyGrid1.Size = new System.Drawing.Size(624, 926);
+            this.flatPropertyGrid1.Size = new System.Drawing.Size(624, 348);
             this.flatPropertyGrid1.TabIndex = 1;
             this.flatPropertyGrid1.ToolbarVisible = false;
             this.flatPropertyGrid1.ViewBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(33)))), ((int)(((byte)(44)))));
@@ -74,19 +78,40 @@
             this.logView1.Name = "logView1";
             this.logView1.ReadOnly = true;
             this.logView1.ShowDateTime = false;
-            this.logView1.Size = new System.Drawing.Size(594, 926);
+            this.logView1.Size = new System.Drawing.Size(116, 348);
             this.logView1.TabIndex = 0;
             this.logView1.Text = "";
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(443, 151);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(285, 185);
+            this.dataGridView1.TabIndex = 2;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(462, 96);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(145, 39);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1218, 926);
+            this.ClientSize = new System.Drawing.Size(740, 348);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.logView1);
             this.Controls.Add(this.flatPropertyGrid1);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -95,6 +120,8 @@
 
         private LotusAPI.Controls.LogView logView1;
         private Abeo.Controls.FlatPropertyGrid flatPropertyGrid1;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button button1;
     }
 }
 
