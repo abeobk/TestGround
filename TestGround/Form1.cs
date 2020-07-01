@@ -56,17 +56,17 @@ namespace TestGround {
 
 
                 //using(var transaction = db.BeginTransaction()) {
-                tt.Tic();
-                for(int i = 0; i < 10000; i++) {
-                    dynamic row = tb.NewRow();
-                    row.ID = int.Parse(db.ExecuteQuery("SELECT COUNT(*) FROM MyResult").Rows[0][0].ToString());
-                    row.Date = DateTime.Now;
-                    row.Result = i % 2 == 0 ? "OK" : "NG";
-                    row.Float = (float)(1.2345678f + i);
-                    row.DoubleVar = 0.5678923453453120 * i;
-                    row.Text = $"hello {i}";
-                    tb.InsertRow(row);
-                }
+                //tt.Tic();
+                //for(int i = 0; i < 10000; i++) {
+                //    dynamic row = tb.NewRow();
+                //    row.ID = int.Parse(db.ExecuteQuery("SELECT COUNT(*) FROM MyResult").Rows[0][0].ToString());
+                //    row.Date = DateTime.Now;
+                //    row.Result = i % 2 == 0 ? "OK" : "NG";
+                //    row.Float = (float)(1.2345678f + i);
+                //    row.DoubleVar = 0.5678923453453120 * i;
+                //    row.Text = $"hello {i}";
+                //    tb.InsertRow(row);
+                //}
                 //transaction.Commit();
                 //}
                 Logger.Debug("Db row insert Elapsed: " + tt.Elapsed);
